@@ -7,31 +7,36 @@ local lib = require("kubectl.lib")
 
 local ResourceView = {}
 
-ResourceView.__index = ResourceView
-
-function ResourceView:create(kind, cmd, opts)
+function ResourceView:new(resource_kind, view_name, cmd, opts)
+  ResourceView.__index = ResourceView
   local instance = {}
   setmetatable(instance, ResourceView)
-
-  instance.kind = kind
+  instance.resource_kind = resource_kind
+  instance.view_name = view_name
   instance.cmd = cmd
   instance.opts = opts or {}
-  instance.namespace = namespace
-  instance.keymap = {
+
+  return instance
+end
+
+function ResourceView:keymap()
+  local kind = self.resource_kind
+  local keymap = {
     gd=function()
       local name = lib.current_word()
       local cmd = kubectl.describe(kind, name, namespace())
-      views.buffer_view({kind, name}, cmd)
+      views.buffer_view(kind.."/"..name, cmd)
     end,
     ge=function()
       local name = lib.current_word()
-      local cmd = events.for_resource(kind, name, namespace())
-      views.buffer_view({"Events for", name}, cmd)
+      local cmd = events.for_kind(kind, name, namespace())
+      views.buffer_view("Events "..kind.."/"..name, cmd)
     end,
     gj=function()
       local name = lib.current_word()
       local cmd = kubectl.json(kind, name, namespace())
-      views.buffer_view({kind, name}, cmd, {filetype="json"})
+      local view_name = kind.."/"..name
+      views.buffer_view(view_name, cmd, {filetype="json"})
     end,
     gl=function()
       local name = lib.current_word()
@@ -41,25 +46,25 @@ function ResourceView:create(kind, cmd, opts)
         vim.list_extend(args, {"--namespace", ns})
       end
       local cmd = kubectl.cmd(args)
-      views.buffer_view({"logs", kind.."/"..name}, cmd, {filetype="json"})
+      views.buffer_view("logs "..kind.."/"..name, cmd, {filetype="json"})
     end,
     gy=function()
       local name = lib.current_word()
       local cmd = kubectl.yaml(kind, name, namespace())
-      views.buffer_view({kind, name}, cmd, {filetype="yaml"})
+      views.buffer_view(kind.."/"..name, cmd, {filetype="yaml"})
     end
   }
-
-  return instance
+  return keymap
 end
 
 function ResourceView:view()
   local ns = namespace()
-  local kind = self.kind
+  local view_name = self.view_name
   local cmd = self.cmd
-  local scope = self.scope
-  local keymap = self.keymap
+  local keymap = self:keymap()
   local opts = self.opts
+  local base_keymap = self:keymap()
+  -- TODO: what is the purpose of this keymap?
   if ns == nil or ns == '' then
     keymap = {
       gn=function()
@@ -70,40 +75,29 @@ function ResourceView:view()
       end,
       gd=function()
        set_current_namespace()
-       self.keymap["gd"]()
+       base_keymap["gd"]()
       end,
       ge=function()
        set_current_namespace()
-       self.keymap["ge"]()
+       base_keymap["ge"]()
       end,
       gl=function()
         set_current_namespace()
-        self.keymap["gl"]()
+        base_keymap["gl"]()
       end,
       gy=function()
        set_current_namespace()
-       self.keymap["gy"]()
+       base_keymap["gy"]()
       end,
       gj=function()
        set_current_namespace()
-       self.keymap["gj"]()
+       base_keymap["gj"]()
       end
     }
     if opts.keymap then
       lib.table_extend(keymap, opts.keymap)
     end
   end
-
-  local view_name = {kind}
-  if opts.view_name ~= nil then
-    view_name = opts.view_name
-  end
-
-  local view_ns = ns
-  if view_ns == nil or view_ns == '' then
-    view_ns = "*all*"
-  end
-  vim.list_extend(view_name, {"namespace="..view_ns})
 
   views.buffer_view(view_name, cmd, { keymap = keymap, namespace=ns})
 end

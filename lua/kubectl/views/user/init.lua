@@ -11,7 +11,7 @@ M.view = function(args)
     vim.list_extend(args, {"--namespace", ns})
   end
   local cmd = kubectl(args)
-  local view_name = cmd.args
+  local view_name = table.concat(cmd.args, " ")
   view(view_name, cmd)
 end
 

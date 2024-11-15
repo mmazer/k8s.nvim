@@ -1,20 +1,11 @@
-local kubectl = require("kubectl.commands")
-local views= require("kubectl.views")
-local view = views.buffer_view
-local namespace = views.view_namespace
+local ViewBuilder = require("kubectl.views.viewbuilder")
 
-local M = {
-  resource = "event"
-}
+local M = {}
 
 M.view = function()
-  local ns = namespace()
-  local cmd = kubectl.get(M.resource, nil, ns)
-  local view_name = {"Events"}
-  if ns ~= nil and ns ~= '' then
-    vim.list_extend(view_name, {"namespace="..ns})
-  end
-  view(view_name, cmd)
+  local view_builder = ViewBuilder:new("events")
+  local view = view_builder:create()
+  view:view()
 end
 
 return M
