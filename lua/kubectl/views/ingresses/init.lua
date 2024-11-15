@@ -1,6 +1,6 @@
 local kubectl = require("kubectl.commands")
 local views= require("kubectl.views")
-local ResourceView = require("kubectl.views.resource")
+local ResourceView = require("kubectl.views.resourceview")
 local namespace = views.view_namespace
 
 local M = {
