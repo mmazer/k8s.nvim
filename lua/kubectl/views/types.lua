@@ -11,6 +11,8 @@ M.short_names = {
   po      = "pods",
   pv      = "persistentvolumes",
   pvc     = "persistentvolumeclaims",
+  rc      = "replicationcontrollers",
+  rs      = "replicasets",
   sa      = "serviceaccounts",
   svc     = "services"
 }
