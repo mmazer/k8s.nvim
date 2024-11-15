@@ -17,7 +17,8 @@ M.view = function()
       local name = lib.current_word()
       local opts = {"-A","-o", "wide", "--field-selector", "spec.nodeName="..name}
       local cmd = kubectl.get("pods", nil, nil, opts)
-      views.buffer_view({"Node Pods", name}, cmd)
+      local view = ResourceView:create("pod", cmd, {view_name={"pod", "node="..name}})
+      view:view()
     end
   }
   opts.keymap = keymap

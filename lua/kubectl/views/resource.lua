@@ -95,6 +95,10 @@ function ResourceView:view()
   end
 
   local view_name = {kind}
+  if opts.view_name ~= nil then
+    view_name = opts.view_name
+  end
+
   local view_ns = ns
   if view_ns == nil or view_ns == '' then
     view_ns = "*all*"
