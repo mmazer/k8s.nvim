@@ -1,9 +1,18 @@
+local resource_aliases = require("kubectl.views.types").resource_aliases
 local M = {}
-local options = {}
 
-M.setup = function(opts)
+local get_resource_for_alias = function(alias)
+  local resource = resource_aliases[alias]
+  if resource == nil or resource == '' then
+    resource = alias
+  end
+
+  return resource
+
+end
+
+M.setup = function()
   vim.api.nvim_create_user_command("Kubectl", function(opts)
-    local short_names = require("kubectl.views.types").short_names
     if #opts.fargs == 0 then
       require("kubectl.views.pods").view()
       return
@@ -32,14 +41,18 @@ M.setup = function(opts)
       return
     end
 
+    if action == "context-ns" then
+      if #opts.fargs < 2 then
+        print("Current namespace: " .. require("kubectl.commands.namespaces").current())
+      else
+        require("kubectl.commands.namespaces").set(opts.fargs[2])
+      end
+      return
+    end
+
     if action == "get" then
       if #opts.fargs >= 2 then
-        local resource_type = opts.fargs[2]
-        local rname = short_names[resource_type]
-        if rname ~= nil then
-          resource_type = rname
-        end
-
+        local resource_type = get_resource_for_alias(opts.fargs[2])
         local ok, view = pcall(require, "kubectl.views." .. resource_type)
         if ok then
           view.view()
@@ -55,19 +68,6 @@ M.setup = function(opts)
   { nargs = "*"})
 
   vim.cmd("cab kube Kubectl")
-
-  vim.api.nvim_create_user_command("Kubens", function(opts)
-    if #opts.fargs == 0 then
-      print("Current namespace: " .. require("kubectl.commands.namespaces").current())
-      return
-    end
-
-    require("kubectl.commands.namespaces").set(opts.fargs[1])
-
-  end, {
-    nargs = "*"
-  })
-  vim.cmd("cab kns Kubens")
 
 end
 
