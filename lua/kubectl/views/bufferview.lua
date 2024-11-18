@@ -3,8 +3,7 @@ local BufferView = {}
 
 function BufferView:new(view_name, cmd, opts)
   BufferView.__index = BufferView
-  local instance = {}
-  setmetatable(instance, BufferView)
+  local instance = setmetatable({}, BufferView)
   instance.view_name = view_name
   instance.cmd = cmd
   instance.opts = opts or {}

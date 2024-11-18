@@ -8,11 +8,9 @@ local BufferView = require("kubectl.views.bufferview")
 
 local ResourceView = {}
 
-ResourceView.__index = ResourceView
-
-function ResourceView:create(kind, cmd, opts)
-  local instance = {}
-  setmetatable(instance, ResourceView)
+function ResourceView:new(kind, cmd, opts)
+  ResourceView.__index = ResourceView
+  local instance = setmetatable({}, ResourceView)
 
   instance.kind = kind
   instance.cmd = cmd
@@ -28,7 +26,7 @@ function ResourceView:create(kind, cmd, opts)
     ge=function()
       local name = lib.current_word()
       local cmd = events.for_resource(kind, name, namespace())
-      local view = BufferView:new({"Events for", kind.."/"..name}, cmd)
+      local view = BufferView:new({"Events", kind.."/"..name}, cmd)
       view:open()
     end,
     gj=function()
