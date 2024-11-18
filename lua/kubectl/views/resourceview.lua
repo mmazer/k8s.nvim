@@ -4,6 +4,7 @@ local views= require("kubectl.views")
 local namespace = views.view_namespace
 local set_current_namespace = views.set_current_namespace
 local lib = require("kubectl.lib")
+local BufferView = require("kubectl.views.bufferview")
 
 local ResourceView = {}
 
@@ -21,17 +22,20 @@ function ResourceView:create(kind, cmd, opts)
     gd=function()
       local name = lib.current_word()
       local cmd = kubectl.describe(kind, name, namespace())
-      views.buffer_view({kind, name}, cmd)
+      local view = BufferView:new({kind, name}, cmd)
+      view:open()
     end,
     ge=function()
       local name = lib.current_word()
       local cmd = events.for_resource(kind, name, namespace())
-      views.buffer_view({"Events for", name}, cmd)
+      local view = BufferView:new({"Events for", kind.."/"..name}, cmd)
+      view:open()
     end,
     gj=function()
       local name = lib.current_word()
       local cmd = kubectl.json(kind, name, namespace())
-      views.buffer_view({kind, name}, cmd, {filetype="json"})
+      local view = BufferView:new({kind, name}, cmd, {filetype="json"})
+      view:open()
     end,
     gl=function()
       local name = lib.current_word()
@@ -41,12 +45,14 @@ function ResourceView:create(kind, cmd, opts)
         vim.list_extend(args, {"--namespace", ns})
       end
       local cmd = kubectl.cmd(args)
-      views.buffer_view({"logs", kind.."/"..name}, cmd, {filetype="json"})
+      local view = BufferView:new({"logs", kind.."/"..name}, cmd)
+      view:open()
     end,
     gy=function()
       local name = lib.current_word()
       local cmd = kubectl.yaml(kind, name, namespace())
-      views.buffer_view({kind, name}, cmd, {filetype="yaml"})
+      local view = BufferView:new({kind, name}, cmd, {filetype="yaml"})
+      view:open()
     end
   }
 
@@ -105,7 +111,8 @@ function ResourceView:view()
   end
   vim.list_extend(view_name, {"namespace="..view_ns})
 
-  views.buffer_view(view_name, cmd, { keymap = keymap, namespace=ns})
+  buffer_view = BufferView:new(view_name, self.cmd, { keymap = keymap, namespace=ns})
+  buffer_view:open()
 end
 
 return ResourceView
