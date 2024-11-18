@@ -66,9 +66,6 @@ M.setup = function()
     end
   end,
   { nargs = "*"})
-
-  vim.cmd("cab kube Kubectl")
-
 end
 
 return M
