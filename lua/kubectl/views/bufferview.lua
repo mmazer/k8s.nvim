@@ -28,9 +28,8 @@ function BufferView:open()
   local buf = self:create_buffer()
 
   self:set_buffer_options(self.opts.buffer)
-
-  vim.api.nvim_buf_set_name(buf, "Kubectl:"..table.concat(self.view_name, " "))
-  vim.api.nvim_buf_set_lines(buf, 0, -1, true, vim.split(data, "\n", {plain=true}))
+  self:set_buffer_name(buf)
+  self:set_buffer_lines(buf, data)
 
   local keywords = self:get_buffer_keywords()
   for _,v in pairs(keywords) do
@@ -57,6 +56,14 @@ function BufferView:open()
   vim.keymap.set({"n"}, "gr", function()
     view:refresh()
   end, {buffer=buf})
+end
+
+function BufferView:set_buffer_name(buffer)
+  vim.api.nvim_buf_set_name(buffer, "Kubectl:"..table.concat(self.view_name, " "))
+end
+
+function BufferView:set_buffer_lines(buffer, data)
+  vim.api.nvim_buf_set_lines(buffer, 0, -1, true, vim.split(data, "\n", {plain=true}))
 end
 
 function BufferView:set_buffer_options(buffer, opts)
