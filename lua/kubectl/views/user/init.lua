@@ -1,7 +1,7 @@
 local kubectl = require("kubectl.commands").cmd
 local views= require("kubectl.views")
-local view = views.buffer_view
 local namespace = views.view_namespace
+local BufferView = require("kubectl.views.bufferview")
 
 local M = {}
 
@@ -12,7 +12,8 @@ M.view = function(args)
   end
   local cmd = kubectl(args)
   local view_name = cmd.args
-  view(view_name, cmd)
+  local view = BufferView:new(view_name, cmd)
+  view:open()
 end
 
 return M

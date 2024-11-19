@@ -14,7 +14,7 @@ M.view = function()
     vim.list_extend(opts, {"-A"})
   end
   local cmd = kubectl.get(M.resource, nil, ns, opts)
-  ResourceView:create(M.resource, cmd):view()
+  ResourceView:new(M.resource, cmd):view()
 end
 
 return M

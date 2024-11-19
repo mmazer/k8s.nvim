@@ -1,6 +1,6 @@
 local M = {}
 
-M.short_names = {
+M.resource_aliases = {
   cm      = "configmaps",
   crd     = "customresourcedefinitions",
   deploy  = "deployments",
