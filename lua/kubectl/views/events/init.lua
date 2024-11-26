@@ -16,7 +16,6 @@ M.view = function()
   end
   local view = BufferView:new(view_name, cmd)
   view:open()
-  view(view_name, cmd)
 end
 
 return M
