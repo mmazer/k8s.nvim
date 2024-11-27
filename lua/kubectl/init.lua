@@ -16,9 +16,7 @@ M.setup = function(options)
   options = options or {}
   local custom_resources = options.custom_resources
   if custom_resources ~= nil then
-    vim.notify("registering customresources", vim.log.levels.INFO)
     for _,cr in ipairs(custom_resources) do
-      vim.notify("registering customresource "..cr, vim.log.levels.INFO)
       customresources.register(cr)
     end
   end
@@ -66,12 +64,11 @@ M.setup = function(options)
         local resource_type = get_resource_for_alias(opts.fargs[2])
         -- check for customresource
         local customresource = customresources.get_customresource(resource_type)
-        vim.notify("customresources"..table.concat(customresources._customresources, " "), vim.log.levels.INFO)
         if customresource ~= nil then
-          vim.notify("using customresource"..resource_type, vim.log.levels.INFO)
             customresource()
             return
         end
+
         local ok, view = pcall(require, "kubectl.views." .. resource_type)
         if ok then
           view.view()
