@@ -1,4 +1,5 @@
 local resource_aliases = require("kubectl.views.types").resource_aliases
+local customresources = require("kubectl.views.customresources")
 local M = {}
 
 local get_resource_for_alias = function(alias)
@@ -11,7 +12,17 @@ local get_resource_for_alias = function(alias)
 
 end
 
-M.setup = function()
+M.setup = function(options)
+  options = options or {}
+  local custom_resources = options.custom_resources
+  if custom_resources ~= nil then
+    vim.notify("registering customresources", vim.log.levels.INFO)
+    for _,cr in ipairs(custom_resources) do
+      vim.notify("registering customresource "..cr, vim.log.levels.INFO)
+      customresources.register(cr)
+    end
+  end
+
   vim.api.nvim_create_user_command("Kubectl", function(opts)
     if #opts.fargs == 0 then
       require("kubectl.views.pods").view()
@@ -53,6 +64,14 @@ M.setup = function()
     if action == "get" then
       if #opts.fargs >= 2 then
         local resource_type = get_resource_for_alias(opts.fargs[2])
+        -- check for customresource
+        local customresource = customresources.get_customresource(resource_type)
+        vim.notify("customresources"..table.concat(customresources._customresources, " "), vim.log.levels.INFO)
+        if customresource ~= nil then
+          vim.notify("using customresource"..resource_type, vim.log.levels.INFO)
+            customresource()
+            return
+        end
         local ok, view = pcall(require, "kubectl.views." .. resource_type)
         if ok then
           view.view()
