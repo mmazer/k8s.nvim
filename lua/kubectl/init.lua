@@ -1,4 +1,5 @@
 local resourcespecs = require("kubectl.views.resourcespecs")
+local lib = require("kubectl.lib")
 local M = {}
 
 M.setup = function(options)
@@ -6,6 +7,7 @@ M.setup = function(options)
   resourcespecs.init(options.custom_resources)
 
   vim.api.nvim_create_user_command("Kubectl", function(opts)
+
     if #opts.fargs == 0 then
       local view = resourcespecs.get_resource_view("pods")
       view()
@@ -47,9 +49,13 @@ M.setup = function(options)
     if action == "get" then
       if #opts.fargs >= 2 then
         local resource = opts.fargs[2]
+        local args = {}
+        if #opts.fargs > 2 then
+          args = lib.table_slice(opts.fargs, 3)
+        end
         local view = resourcespecs.get_resource_view(resource)
         if view ~= nil then
-          view()
+          view(args)
           return
         end
 
