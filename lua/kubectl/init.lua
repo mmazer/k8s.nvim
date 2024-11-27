@@ -4,7 +4,7 @@ local M = {}
 
 M.setup = function(options)
   options = options or {}
-  resourcespecs.init(options.custom_resources)
+  resourcespecs.init(options.resource_specs)
 
   vim.api.nvim_create_user_command("Kubectl", function(opts)
 
