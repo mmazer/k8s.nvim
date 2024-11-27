@@ -33,6 +33,19 @@ M.tail = function(t)
   return helper((table.unpack or unpack)(t))
 end
 
+M.table_slice = function(tb, start, stop)
+  local sliced = {}
+  start = start or 1
+  stop = stop or #tb
+  for i,value in ipairs(tb) do
+    if i >= start and i <= stop then
+      table.insert(sliced, value)
+    end
+  end
+
+  return sliced
+end
+
 M.table_extend = function(dst, src)
   for k,v in pairs(src) do
     dst[k] = v
