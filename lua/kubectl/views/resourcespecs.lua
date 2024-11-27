@@ -8,12 +8,14 @@ M.shortnames = {}
 M.resourceviews = {}
 
 M.resource_specs = {
+  apiservices={shortnames={"apis"}},
   clusterroles={shortnames={"cr"}},
   clusterrolebindings={shortnames={"crb"}},
   configmaps = {shortnames={"cm"}},
   customresourcedefinitions = {shortnames={"crd", "crds"}},
   deployments = {shortnames={"deploy"}},
   daemonsets = {shortnames={"ds"}},
+  endpoints={shortnames={"ep"}},
   events = {shortnames={"ev"}, view=require("kubectl.views.events").view},
   ingresses = {shortnames={"ing"}},
   jobs = {},
@@ -31,6 +33,7 @@ M.resource_specs = {
   services = {shortnames={"svc"}},
   serviceaccounts = {shortnames={"sa"}},
   secrets = {},
+  statefulsets={shortnames={"sts"}},
 }
 
 M.create_default_view = function(resource)
