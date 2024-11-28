@@ -17,6 +17,7 @@ M.resource_specs = {
   daemonsets = {shortnames={"ds"}},
   endpoints={shortnames={"ep"}},
   events = {shortnames={"ev"}, view=require("kubectl.views.events").view},
+  horizontalpodautoscalers = {shortnames={"hpa"}},
   ingresses = {shortnames={"ing"}},
   jobs = {},
   cronjobs = {shortnames={"cj"}},
@@ -58,7 +59,6 @@ M.register_spec = function(name, opts)
   end
   local view = opts.view or M.create_default_view(name)
   M.resourceviews[name] = view
-
 end
 
 M.get_resource_view = function(name)
