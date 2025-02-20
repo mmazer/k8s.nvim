@@ -30,7 +30,8 @@ M.setup = function(options)
         if view ~= nil then
           view(args)
         else
-          vim.notify("no resource found for "..resource, vim.log.levels.ERROR)
+          -- otherwise just run user kubectl get
+          require("kubectl.views.user").view(opts.fargs)
         end
         return
       end
