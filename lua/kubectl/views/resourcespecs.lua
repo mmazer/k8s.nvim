@@ -1,5 +1,5 @@
 local ResourceView = require("kubectl.views.resourceview")
-local views= require("kubectl.views")
+local views = require("kubectl.views")
 local namespace = views.view_namespace
 local kubectl = require("kubectl.commands")
 local M = {}
@@ -8,33 +8,35 @@ M.shortnames = {}
 M.resourceviews = {}
 
 M.resource_specs = {
-  apiservices={shortnames={"apis"}},
-  clusterroles={shortnames={"cr"}},
-  clusterrolebindings={shortnames={"crb"}},
-  configmaps = {shortnames={"cm"}},
-  customresourcedefinitions = {shortnames={"crd", "crds"}},
-  deployments = {shortnames={"deploy"}},
-  daemonsets = {shortnames={"ds"}},
-  endpoints={shortnames={"ep"}},
-  events = {shortnames={"ev"}, view=require("kubectl.views.events").view},
-  horizontalpodautoscalers = {shortnames={"hpa"}},
-  ingresses = {shortnames={"ing"}},
+  apiservices = { shortnames = { "apis" } },
+  clusterroles = { shortnames = { "cr" } },
+  clusterrolebindings = { shortnames = { "crb" } },
+  configmaps = { shortnames = { "cm" } },
+  customresourcedefinitions = { shortnames = { "crd", "crds" } },
+  deployments = { shortnames = { "deploy" } },
+  daemonsets = { shortnames = { "ds" } },
+  endpoints = { shortnames = { "ep" } },
+  events = { shortnames = { "ev" }, view = require("kubectl.views.events").view },
+  gateways = { shortnames = { "gtw" } },
+  horizontalpodautoscalers = { shortnames = { "hpa" } },
+  httproutes = {},
+  ingresses = { shortnames = { "ing" } },
   jobs = {},
-  cronjobs = {shortnames={"cj"}},
-  namespaces = {shortnames={"ns"}},
-  nodes = {shortnames={"no"}, view=require("kubectl.views.nodes").view},
-  pods = {shortnames={"po"}},
-  poddisruptionbudgets = {shortnames={"pdb"}},
-  persistentvolumes={shortnames={"pv"}},
-  persistentvolumeclaims={shortnames={"pvc"}},
-  replicationcontrollers={shortnames={"rc"}},
-  replicasets={shortnames={"rs"}},
+  cronjobs = { shortnames = { "cj" } },
+  namespaces = { shortnames = { "ns" } },
+  nodes = { shortnames = { "no" }, view = require("kubectl.views.nodes").view },
+  pods = { shortnames = { "po" } },
+  poddisruptionbudgets = { shortnames = { "pdb" } },
+  persistentvolumes = { shortnames = { "pv" } },
+  persistentvolumeclaims = { shortnames = { "pvc" } },
+  replicationcontrollers = { shortnames = { "rc" } },
+  replicasets = { shortnames = { "rs" } },
   roles = {},
-  rolebindings={shortnames={"rb"}},
-  services = {shortnames={"svc"}},
-  serviceaccounts = {shortnames={"sa"}},
+  rolebindings = { shortnames = { "rb" } },
+  services = { shortnames = { "svc" } },
+  serviceaccounts = { shortnames = { "sa" } },
   secrets = {},
-  statefulsets={shortnames={"sts"}},
+  statefulsets = { shortnames = { "sts" } },
 }
 
 M.create_default_view = function(resource)
@@ -42,7 +44,7 @@ M.create_default_view = function(resource)
     local ns = namespace()
     opts = opts or {}
     if ns == nil or ns == '' then
-      vim.list_extend(opts, {"-A"})
+      vim.list_extend(opts, { "-A" })
     end
     local cmd = kubectl.get(resource, nil, ns, opts)
     ResourceView:new(resource, cmd):view()
