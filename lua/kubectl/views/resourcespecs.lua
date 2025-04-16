@@ -24,6 +24,7 @@ M.resource_specs = {
   jobs = {},
   cronjobs = { shortnames = { "cj" } },
   namespaces = { shortnames = { "ns" } },
+  networkpolicies = { shortnames = { "netwp" } },
   nodes = { shortnames = { "no" }, view = require("kubectl.views.nodes").view },
   pods = { shortnames = { "po" } },
   poddisruptionbudgets = { shortnames = { "pdb" } },
