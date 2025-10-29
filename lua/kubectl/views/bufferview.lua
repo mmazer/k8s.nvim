@@ -16,6 +16,13 @@ function BufferView:new(view_name, cmd, opts)
 end
 
 function BufferView:open()
+  local bufname = self:get_buffer_name()
+  local bufnum = lib.find_buffer_by_name(bufname)
+  if bufnum > -1 then
+    vim.api.nvim_win_set_buf(bufnum)
+    return
+  end
+
   local data = self.cmd.exec()
   if data == nil or data == '' then
     data = "No resources found"
@@ -28,7 +35,7 @@ function BufferView:open()
   local buf = self:create_buffer()
 
   self:set_buffer_options(self.opts.buffer)
-  self:set_buffer_name(buf)
+  self:set_buffer_name(buf, bufname)
   self:set_buffer_lines(buf, data)
 
   local keywords = self:get_buffer_keywords()
@@ -58,8 +65,12 @@ function BufferView:open()
   end, {buffer=buf})
 end
 
-function BufferView:set_buffer_name(buffer)
-  vim.api.nvim_buf_set_name(buffer, "Kubectl:"..table.concat(self.view_name, " "))
+function BufferView:get_buffer_name()
+  return "Kubectl:"..table.concat(self.view_name, "")
+end
+
+function BufferView:set_buffer_name(buffer, name)
+  vim.api.nvim_buf_set_name(buffer, name)
 end
 
 function BufferView:set_buffer_lines(buffer, data)

@@ -28,6 +28,11 @@ M.filter = function(t,predicate)
   return t
 end
 
+M.endswith = function(str, subs)
+  local ends = string.sub(str, -(#subs))
+  return ends == subs
+end
+
 M.tail = function(t)
   local function helper(head, ...) return #{...} > 0 and {...} or nil end
   return helper((table.unpack or unpack)(t))
@@ -59,6 +64,17 @@ M.table_defaults = function(dst, defaults)
     end
   end
   return dst
+end
+
+M.find_buffer_by_name = function(view_name)
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    local buf_name = vim.api.nvim_buf_get_name(buf)
+    print("found bufnum "..buf.." name="..buf_name)
+    if M.endswith(buf_name,  view_name) then
+      return buf
+    end
+  end
+  return -1
 end
 
 return M
