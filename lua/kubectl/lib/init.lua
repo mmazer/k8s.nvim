@@ -69,7 +69,6 @@ end
 M.find_buffer_by_name = function(view_name)
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
     local buf_name = vim.api.nvim_buf_get_name(buf)
-    print("found bufnum "..buf.." name="..buf_name)
     if M.endswith(buf_name,  view_name) then
       return buf
     end
