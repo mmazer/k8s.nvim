@@ -66,7 +66,7 @@ function BufferView:open()
 end
 
 function BufferView:get_buffer_name()
-  return "Kubectl:"..table.concat(self.view_name, "")
+  return "Kubectl:"..table.concat(self.view_name, " ")
 end
 
 function BufferView:set_buffer_name(buffer, name)
