@@ -19,7 +19,7 @@ function BufferView:open()
   local bufname = self:get_buffer_name()
   local bufnum = lib.find_buffer_by_name(bufname)
   if bufnum > -1 then
-    vim.api.nvim_win_set_buf(bufnum)
+    vim.api.nvim_win_set_buf(0, bufnum)
     return
   end
 
