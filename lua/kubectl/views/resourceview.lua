@@ -107,7 +107,9 @@ function ResourceView:view()
   if view_ns == nil or view_ns == '' then
     view_ns = "*all*"
   end
-  vim.list_extend(view_name, {"namespace="..view_ns})
+  if lib.is_table(view_name) then
+    vim.list_extend(view_name, {"namespace="..view_ns})
+  end
 
   buffer_view = BufferView:new(view_name, self.cmd, { keymap = keymap, namespace=ns})
   buffer_view:open()

@@ -35,7 +35,11 @@ M.setup = function(options)
 
       local user_command = user_commands[action]
       if user_command ~= nil then
-        require("kubectl.views.user").view(user_command)
+        if lib.is_function(user_command) then
+          user_command()
+        else
+          require("kubectl.views.user").view(user_command)
+        end
         return
       end
 

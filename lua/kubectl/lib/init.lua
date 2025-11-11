@@ -76,4 +76,11 @@ M.find_buffer_by_name = function(view_name)
   return -1
 end
 
+M.is_function = function(variable)
+  return type(variable) == "function"
+end
+
+M.is_table = function(variable)
+  return type(variable) == "table"
+end
 return M
