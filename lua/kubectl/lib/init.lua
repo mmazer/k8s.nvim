@@ -66,6 +66,14 @@ M.table_defaults = function(dst, defaults)
   return dst
 end
 
+M.list_tostring = function(list)
+  local s = ""
+  for _, str in ipairs(list) do
+    s = s.." "..str
+  end
+  return s
+end
+
 M.find_buffer_by_name = function(view_name)
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
     local buf_name = vim.api.nvim_buf_get_name(buf)
